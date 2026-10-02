@@ -78,7 +78,7 @@ Implantar uma nuvem computacional de infraestrutura na AWS para hospedar a aplic
 
 ## 7. Cronograma de Execução (Apêndice A)
 
-| Fase | Atividade | S1 | S2 | S3 | S4 | S5 | S6 |
+| Fase | Atividade | S1 (02/10) | S2 (09/10) | S3 (16/10) | S4 (23/10) | S5 (30/10) | S6 (06/11) |
 |---|---|---|---|---|---|---|---|
 | 1. Planejamento | Escopo, requisitos e desenho da arquitetura | ■ | | | | | |
 | 2. Aplicação | Modelagem do banco e API (produtos, movimentações) | | ■ | | | | |
@@ -91,7 +91,7 @@ Implantar uma nuvem computacional de infraestrutura na AWS para hospedar a aplic
 | 5. Transição | Plano de migração das planilhas e importação de teste | | | | | ■ | |
 | 6. Finalização | Documentação final, estimativa de custos e apresentação | | | | | ■ | ■ |
 
-> Ajuste a duração e as semanas conforme o calendário real da disciplina.
+> S1 (02/10 a 09/10/2026) = elaboração e entrega parcial, prevista para 09/10/2026. S2 a S6 são estimativa para a entrega final.
 
 ## 8. Resultados Esperados
 
