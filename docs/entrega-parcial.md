@@ -78,20 +78,20 @@ Implantar uma nuvem computacional de infraestrutura na AWS para hospedar a aplic
 
 ## 7. Cronograma de Execução (Apêndice A)
 
-| Fase | Atividade | S1 (02/10) | S2 (09/10) | S3 (16/10) | S4 (23/10) | S5 (30/10) | S6 (06/11) |
-|---|---|---|---|---|---|---|---|
-| 1. Planejamento | Escopo, requisitos e desenho da arquitetura | ■ | | | | | |
-| 2. Aplicação | Modelagem do banco e API (produtos, movimentações) | | ■ | | | | |
-| | Telas, alertas de estoque mínimo e importação CSV | | ■ | ■ | | | |
-| 3. Infraestrutura AWS | VPC, sub-redes, Security Groups | | | ■ | | | |
-| | RDS, S3, Launch Template e Auto Scaling | | | ■ | ■ | | |
-| | ALB e health check | | | | ■ | | |
-| 4. Testes | Funcionais e de integração | | | | ■ | | |
-| | Carga (k6/JMeter), segurança e disponibilidade (derrubar instância) | | | | | ■ | |
-| 5. Transição | Plano de migração das planilhas e importação de teste | | | | | ■ | |
-| 6. Finalização | Documentação final, estimativa de custos e apresentação | | | | | ■ | ■ |
+| Fase | Atividade | S1 (02/10) | S2 (09/10) | S3 (16/10) | S4 (23/10) | S5 (30/10) | S6 (06/11) | S7 (13/11) |
+|---|---|---|---|---|---|---|---|---|
+| 1. Planejamento | Escopo, requisitos, arquitetura e entrega parcial (09/10) | ■ | | | | | | |
+| 2. Aplicação | Modelagem do banco e API | | ■ | | | | | |
+| | Telas, alertas de estoque mínimo e importação CSV | | ■ | ■ | | | | |
+| 3. Infraestrutura AWS | VPC, sub-redes e Security Groups | | | ■ | | | | |
+| | RDS, S3, Launch Template e Auto Scaling | | | ■ | ■ | | | |
+| | ALB e health check | | | | ■ | | | |
+| 4. Testes | Funcionais e de integração | | | | ■ | | | |
+| | Carga, segurança e disponibilidade | | | | | ■ | ■ | |
+| 5. Transição | Plano de migração e importação de teste | | | | | | ■ | |
+| 6. Finalização | Documentação final, custos e ensaio da apresentação | | | | | | ■ | ■ |
 
-> S1 (02/10 a 09/10/2026) = elaboração e entrega parcial, prevista para 09/10/2026. S2 a S6 são estimativa para a entrega final.
+> Todas as atividades terminam até 20/11/2026. 21/11 é reserva; 22/11 (até 23:59) é só para o envio.
 
 ## 8. Resultados Esperados
 
