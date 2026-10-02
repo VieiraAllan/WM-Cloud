@@ -4,7 +4,9 @@
 Centro Universitário Augusto Motta (Unisuam) — Tecnologia em Análise e Desenvolvimento de Sistemas
 Rio de Janeiro - RJ, 2026
 
-> RASCUNHO da entrega parcial (Escopo + Cronograma). Itens entre [colchetes] precisam ser preenchidos por você (nomes, professor, datas).
+Professor: Vinicius Pinto da Silva
+
+Alunos: Állan Ribeiro Vieira (25107225); Lucas Concentino (24201597); Lucas da Silva de Maria (24202179)
 
 ---
 
