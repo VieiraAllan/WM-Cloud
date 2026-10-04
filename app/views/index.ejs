@@ -1,0 +1,31 @@
+<%- include('_head') %>
+<h1>Estoque atual</h1>
+<% if (alertCount > 0) { %>
+  <div class="alert warn"><%= alertCount %> produto(s) com estoque igual ou abaixo do mínimo.
+    <a href="/?low=1">Ver apenas alertas</a></div>
+<% } %>
+<form class="inline" method="get" action="/">
+  <input name="q" value="<%= q %>" placeholder="Buscar por nome ou SKU">
+  <label><input type="checkbox" name="low" value="1" <%= low ? 'checked' : '' %>> Somente estoque baixo</label>
+  <button>Filtrar</button>
+</form>
+<table>
+  <thead><tr><th>SKU</th><th>Produto</th><th>Categoria</th><th>Fornecedor</th><th class="n">Estoque</th><th class="n">Mínimo</th><th>Situação</th><th></th></tr></thead>
+  <tbody>
+  <% products.forEach(p => { const lowStock = p.stock <= p.min_stock; %>
+    <tr class="<%= lowStock ? 'low' : '' %>">
+      <td><%= p.sku %></td><td><%= p.name %></td><td><%= p.category || '-' %></td><td><%= p.supplier || '-' %></td>
+      <td class="n"><%= p.stock %></td><td class="n"><%= p.min_stock %></td>
+      <td><%= lowStock ? 'Estoque baixo' : 'OK' %></td>
+      <td class="actions">
+        <a href="/movements/new?type=in&product=<%= p.id %>">Entrada</a>
+        <a href="/movements/new?type=out&product=<%= p.id %>">Saída</a>
+        <a href="/products/<%= p.id %>/edit">Editar</a>
+        <form method="post" action="/products/<%= p.id %>/delete" onsubmit="return confirm('Excluir produto?')"><button class="link">Excluir</button></form>
+      </td>
+    </tr>
+  <% }) %>
+  <% if (!products.length) { %><tr><td colspan="8" class="empty">Nenhum produto encontrado.</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('_foot') %>

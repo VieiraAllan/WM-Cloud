@@ -1,0 +1,6 @@
+sku,name,category,supplier,stock,min_stock
+ARZ-001,Arroz 5kg,Alimentos,Distribuidora Sul,120,40
+FEI-002,Feijão Carioca 1kg,Alimentos,Distribuidora Sul,15,30
+OLE-003,Óleo de Soja 900ml,Alimentos,AgroBrasil,80,25
+DET-004,Detergente 500ml,Limpeza,Limpa Mais,200,60
+SAB-005,Sabão em Pó 1kg,Limpeza,Limpa Mais,10,20

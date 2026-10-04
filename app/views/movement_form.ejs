@@ -1,0 +1,13 @@
+<%- include('_head') %>
+<h1>Nova movimentação</h1>
+<form method="post" action="/movements" class="stack">
+  <label>Tipo
+    <select name="type"><option value="in" <%= form.type === 'in' ? 'selected' : '' %>>Entrada</option><option value="out" <%= form.type === 'out' ? 'selected' : '' %>>Saída</option></select></label>
+  <label>Produto
+    <select name="product_id" required><option value="">Selecione</option>
+      <% products.forEach(p => { %><option value="<%= p.id %>" <%= String(form.product_id) === String(p.id) ? 'selected' : '' %>><%= p.sku %> - <%= p.name %> (saldo <%= p.stock %>)</option><% }) %></select></label>
+  <label>Quantidade <input name="quantity" type="number" min="1" required value="<%= form.quantity || '' %>"></label>
+  <label>Observação <input name="note" maxlength="255" value="<%= form.note || '' %>"></label>
+  <div><button>Registrar</button> <a href="/movements">Cancelar</a></div>
+</form>
+<%- include('_foot') %>

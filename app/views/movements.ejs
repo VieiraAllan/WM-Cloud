@@ -1,0 +1,17 @@
+<%- include('_head') %>
+<h1>Histórico de movimentações</h1>
+<p><a class="btn" href="/movements/new?type=in">Nova entrada</a> <a class="btn" href="/movements/new?type=out">Nova saída</a></p>
+<form class="inline" method="get" action="/movements">
+  <select name="type"><option value="">Todos os tipos</option><option value="in" <%= type === 'in' ? 'selected' : '' %>>Entradas</option><option value="out" <%= type === 'out' ? 'selected' : '' %>>Saídas</option></select>
+  <select name="product"><option value="">Todos os produtos</option>
+    <% products.forEach(p => { %><option value="<%= p.id %>" <%= product === p.id ? 'selected' : '' %>><%= p.sku %> - <%= p.name %></option><% }) %></select>
+  <button>Filtrar</button>
+</form>
+<table><thead><tr><th>Data</th><th>Tipo</th><th>SKU</th><th>Produto</th><th class="n">Qtd.</th><th>Observação</th></tr></thead><tbody>
+<% rows.forEach(m => { %><tr>
+  <td><%= new Date(m.created_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) %></td>
+  <td><%= m.type === 'in' ? 'Entrada' : 'Saída' %></td><td><%= m.sku %></td><td><%= m.product %></td>
+  <td class="n"><%= m.type === 'in' ? '+' : '-' %><%= m.quantity %></td><td><%= m.note || '' %></td></tr><% }) %>
+<% if (!rows.length) { %><tr><td colspan="6" class="empty">Nenhuma movimentação.</td></tr><% } %>
+</tbody></table>
+<%- include('_foot') %>

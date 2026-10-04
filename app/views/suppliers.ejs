@@ -1,0 +1,10 @@
+<%- include('_head') %>
+<h1>Fornecedores</h1>
+<form class="inline" method="post" action="/suppliers">
+  <input name="name" required maxlength="150" placeholder="Nome"><input name="email" type="email" maxlength="150" placeholder="E-mail"><input name="phone" maxlength="30" placeholder="Telefone"><button>Adicionar</button>
+</form>
+<table><thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th></th></tr></thead><tbody>
+<% rows.forEach(r => { %><tr><td><%= r.name %></td><td><%= r.email || '-' %></td><td><%= r.phone || '-' %></td><td class="actions"><form method="post" action="/suppliers/<%= r.id %>/delete" onsubmit="return confirm('Excluir fornecedor?')"><button class="link">Excluir</button></form></td></tr><% }) %>
+<% if (!rows.length) { %><tr><td colspan="4" class="empty">Nenhum fornecedor.</td></tr><% } %>
+</tbody></table>
+<%- include('_foot') %>

@@ -1,0 +1,18 @@
+<%- include('_head') %>
+<h1><%= product.id ? 'Editar produto' : 'Novo produto' %></h1>
+<form method="post" action="<%= product.id ? '/products/' + product.id : '/products' %>" class="stack">
+  <label>SKU <input name="sku" required maxlength="50" value="<%= product.sku || '' %>"></label>
+  <label>Nome <input name="name" required maxlength="200" value="<%= product.name || '' %>"></label>
+  <label>Categoria
+    <select name="category_id"><option value="">-</option>
+      <% categories.forEach(c => { %><option value="<%= c.id %>" <%= String(product.category_id) === String(c.id) ? 'selected' : '' %>><%= c.name %></option><% }) %>
+    </select></label>
+  <label>Fornecedor
+    <select name="supplier_id"><option value="">-</option>
+      <% suppliers.forEach(s => { %><option value="<%= s.id %>" <%= String(product.supplier_id) === String(s.id) ? 'selected' : '' %>><%= s.name %></option><% }) %>
+    </select></label>
+  <label>Estoque mínimo <input name="min_stock" type="number" min="0" value="<%= product.min_stock != null ? product.min_stock : 0 %>"></label>
+  <% if (!product.id) { %><label>Estoque inicial <input name="stock" type="number" min="0" value="<%= product.stock || 0 %>"></label><% } %>
+  <div><button>Salvar</button> <a href="/">Cancelar</a></div>
+</form>
+<%- include('_foot') %>

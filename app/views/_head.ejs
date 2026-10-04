@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WM Cloud</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="/">WM <span>Cloud</span></a>
+  <nav>
+    <a href="/" class="<%= page === 'stock' ? 'on' : '' %>">Estoque</a>
+    <a href="/products/new" class="<%= page === 'products' ? 'on' : '' %>">Novo produto</a>
+    <a href="/movements" class="<%= page === 'movements' ? 'on' : '' %>">Movimentações</a>
+    <a href="/categories" class="<%= page === 'categories' ? 'on' : '' %>">Categorias</a>
+    <a href="/suppliers" class="<%= page === 'suppliers' ? 'on' : '' %>">Fornecedores</a>
+    <a href="/import" class="<%= page === 'import' ? 'on' : '' %>">Importar CSV</a>
+  </nav>
+</header>
+<main>
+<% if (typeof error !== 'undefined' && error) { %><div class="alert err"><%= error %></div><% } %>

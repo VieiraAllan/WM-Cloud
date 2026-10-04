@@ -1,0 +1,8 @@
+<%- include('_head') %>
+<h1>Categorias</h1>
+<form class="inline" method="post" action="/categories"><input name="name" required maxlength="100" placeholder="Nova categoria"><button>Adicionar</button></form>
+<table><thead><tr><th>Nome</th><th></th></tr></thead><tbody>
+<% rows.forEach(r => { %><tr><td><%= r.name %></td><td class="actions"><form method="post" action="/categories/<%= r.id %>/delete" onsubmit="return confirm('Excluir categoria?')"><button class="link">Excluir</button></form></td></tr><% }) %>
+<% if (!rows.length) { %><tr><td colspan="2" class="empty">Nenhuma categoria.</td></tr><% } %>
+</tbody></table>
+<%- include('_foot') %>

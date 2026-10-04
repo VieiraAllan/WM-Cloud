@@ -1,0 +1,9 @@
+<%- include('_head') %>
+<h1>Importar planilha (CSV)</h1>
+<p>Exporte a planilha atual como CSV com as colunas: <code>sku, name, category, supplier, stock, min_stock</code>. Produtos existentes (mesmo SKU) têm cadastro atualizado; o estoque inicial só é lançado para produtos novos.</p>
+<form method="post" action="/import" enctype="multipart/form-data" class="inline"><input type="file" name="file" accept=".csv,text/csv" required><button>Importar</button></form>
+<% if (result) { %>
+  <div class="alert ok"><%= result.created %> produto(s) criado(s), <%= result.updated %> atualizado(s).</div>
+  <% if (result.errors.length) { %><div class="alert err"><ul><% result.errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div><% } %>
+<% } %>
+<%- include('_foot') %>
