@@ -12,11 +12,11 @@ Alunos: Állan Ribeiro Vieira (25107225); Lucas Concentino (24201597); Lucas da 
 
 ## 1. Introdução e Proposta
 
-Empresas de distribuição de médio porte ainda controlam o estoque em planilhas eletrônicas. Esse modelo gera divergência de saldo, falta de histórico confiável das movimentações, ruptura de produtos por ausência de alertas e dificuldade de trabalho simultâneo entre vários usuários.
+Armazéns de médio porte, de qualquer tipo de produto, ainda controlam o estoque em planilhas eletrônicas. Esse modelo gera divergência de saldo, falta de histórico confiável das movimentações, ruptura de produtos por ausência de alertas e dificuldade de trabalho simultâneo entre vários usuários.
 
 Este projeto propõe o **WM Cloud**, um sistema web de gestão de estoque hospedado em infraestrutura de computação em nuvem na plataforma **AWS**. A proposta é projetar, implantar e testar uma infraestrutura IaaS que suporte a aplicação com banco de dados relacional, com foco em disponibilidade, segurança, armazenamento com backup e controle de custos.
 
-**Cenário de negócio:** distribuidora de médio porte com 2.000 a 3.000 SKUs, cerca de 30 usuários simultâneos e picos de acesso no início e no fim do expediente. Hoje o controle é feito em planilhas Excel, que serão migradas para o sistema na nuvem.
+**Cenário de negócio:** armazém de médio porte com 2.000 a 3.000 SKUs, cerca de 30 usuários simultâneos e picos de acesso no início e no fim do expediente. Hoje o controle é feito em planilhas Excel, que serão migradas para o sistema na nuvem.
 
 ## 2. Produto
 
