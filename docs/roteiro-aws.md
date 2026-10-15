@@ -51,7 +51,7 @@ boto3.client('secretsmanager', region_name='us-east-1').create_secret(Name='wm-c
 PY
 ```
 
-Para ler a senha: console do **Secrets Manager → wm-cloud/admin → Recuperar valor do segredo**. Para trocar a senha: edite o segredo e faça um *instance refresh* (veja "Publicar uma nova versão"), porque a instância lê o segredo ao subir.
+Para ler a senha: console do **Secrets Manager → wm-cloud/admin → Recuperar valor do segredo**. Para trocar a senha: edite o segredo e substitua a instância (veja "Publicar uma nova versão da aplicação"), porque a instância lê o segredo ao subir.
 
 ## Etapa 4 — Launch Template e Auto Scaling
 
@@ -81,10 +81,15 @@ CloudWatch Alarms: CPU do ASG > 70%, `HTTPCode_Target_5XX_Count` do ALB, `UnHeal
 cd ~/WM-Cloud && git pull
 tar --exclude=node_modules -czf /tmp/wm-cloud.tgz app
 aws s3 cp /tmp/wm-cloud.tgz s3://SEU-BUCKET/wm-cloud.tgz
-aws autoscaling start-instance-refresh --auto-scaling-group-name wm-asg --preferences MinHealthyPercentage=0,InstanceWarmup=120
+# nova versão do Launch Template com o user data (arquivo preenchido) e torná-la padrão
+aws ec2 create-launch-template-version --launch-template-name wm-lt --source-version 1 --launch-template-data "{\"UserData\":\"$(base64 -w0 /tmp/ud.sh)\"}"
+aws ec2 modify-launch-template --launch-template-name wm-lt --default-version NUMERO_DA_VERSAO
+
+# substituir a instância: o ASG cria outra já com a versão nova
+aws autoscaling terminate-instance-in-auto-scaling-group --instance-id ID_DA_INSTANCIA --no-should-decrement-desired-capacity
 ```
 
-O *instance refresh* troca as instâncias para que baixem o pacote novo. Com uma só instância o site fica alguns minutos fora do ar; com duas, use `MinHealthyPercentage=50` e não há interrupção.
+No Learner Lab o comando `start-instance-refresh` é bloqueado por política da organização, por isso a instância é encerrada pelo próprio Auto Scaling. Com uma só instância o site fica alguns minutos fora do ar; com duas, troque uma de cada vez.
 
 ## Etapa 8 — Encerramento de cada sessão
 
