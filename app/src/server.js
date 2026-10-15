@@ -3,6 +3,15 @@ const express = require('express');
 const multer = require('multer');
 const { parse } = require('csv-parse/sync');
 const { pool, migrate, addMovement, withTransaction, HttpError } = require('./db');
+const { loadConfig, createAuth } = require('./auth');
+
+let auth;
+try {
+  auth = createAuth(loadConfig());
+} catch (err) {
+  console.error('Falha ao iniciar:', err.message);
+  process.exit(1);
+}
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
@@ -22,6 +31,29 @@ app.get('/health/db', async (req, res) => {
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 const int = (v) => (v === '' || v == null ? null : Number.parseInt(v, 10));
 const render = (res, view, data = {}) => res.render(view, { error: null, ok: null, ...data });
+
+// ---------- Login (usuário único) ----------
+// Tudo abaixo da linha "requireLogin" exige sessão. Ficam de fora: /health*, o CSS e o próprio login.
+const loginPage = (res, data = {}) => render(res, 'login', { showNav: false, page: '', ...data });
+
+app.get('/login', (req, res) => (auth.currentUser(req) ? res.redirect('/') : loginPage(res)));
+
+app.post('/login', wrap(async (req, res) => {
+  if (!auth.checkCredentials(req.body.username, req.body.password)) {
+    await new Promise((r) => setTimeout(r, 500)); // atrasa tentativas erradas
+    res.status(401);
+    return loginPage(res, { error: 'Usuário ou senha inválidos.' });
+  }
+  auth.startSession(res);
+  res.redirect(303, '/');
+}));
+
+app.post('/logout', (req, res) => {
+  auth.endSession(res);
+  res.redirect(303, '/login');
+});
+
+app.use(auth.requireLogin);
 
 // ---------- Estoque atual ----------
 app.get('/', wrap(async (req, res) => {
@@ -107,13 +139,50 @@ app.post('/products/:id/delete', wrap(async (req, res) => {
 }));
 
 // ---------- Categorias e fornecedores ----------
-function simpleCrud(table, view, page, fields) {
+function simpleCrud(table, view, editView, page, fields) {
+  const readValues = (body) => fields.map((f) => (body[f] || '').trim() || null);
+  const requireId = (req) => {
+    if (!/^\d+$/.test(req.params.id)) throw new HttpError(404, 'Registro não encontrado.');
+    return Number(req.params.id);
+  };
+
   app.get(`/${table}`, wrap(async (req, res) => {
     const { rows } = await pool.query(`SELECT * FROM ${table} ORDER BY name`);
     render(res, view, { rows, page });
   }));
+
+  app.get(`/${table}/:id/edit`, wrap(async (req, res) => {
+    const { rows } = await pool.query(`SELECT * FROM ${table} WHERE id = $1`, [requireId(req)]);
+    if (!rows.length) throw new HttpError(404, 'Registro não encontrado.');
+    render(res, editView, { item: rows[0], page });
+  }));
+
+  app.post(`/${table}/:id`, wrap(async (req, res) => {
+    const id = requireId(req);
+    const vals = readValues(req.body);
+    const item = { id, ...Object.fromEntries(fields.map((f) => [f, req.body[f] || ''])) };
+    if (!vals[0]) { // o primeiro campo (nome) é obrigatório
+      res.status(422);
+      return render(res, editView, { item, page, error: 'Informe o nome.' });
+    }
+    try {
+      const sets = fields.map((f, i) => `${f} = $${i + 1}`).join(', ');
+      const { rowCount } = await pool.query(`UPDATE ${table} SET ${sets} WHERE id = $${fields.length + 1}`, [...vals, id]);
+      if (!rowCount) throw new HttpError(404, 'Registro não encontrado.');
+      res.redirect(`/${table}`);
+    } catch (err) {
+      if (err.code !== '23505') throw err;
+      render(res, editView, { item, page, error: 'Já existe um registro com esse nome.' });
+    }
+  }));
+
   app.post(`/${table}`, wrap(async (req, res) => {
-    const vals = fields.map((f) => (req.body[f] || '').trim() || null);
+    const vals = readValues(req.body);
+    if (!vals[0]) {
+      const { rows } = await pool.query(`SELECT * FROM ${table} ORDER BY name`);
+      res.status(422);
+      return render(res, view, { rows, page, error: 'Informe o nome.' });
+    }
     try {
       await pool.query(
         `INSERT INTO ${table} (${fields.join(',')}) VALUES (${fields.map((_, i) => `$${i + 1}`).join(',')})`, vals);
@@ -129,8 +198,8 @@ function simpleCrud(table, view, page, fields) {
     res.redirect(`/${table}`);
   }));
 }
-simpleCrud('categories', 'categories', 'categories', ['name']);
-simpleCrud('suppliers', 'suppliers', 'suppliers', ['name', 'email', 'phone']);
+simpleCrud('categories', 'categories', 'category_form', 'categories', ['name']);
+simpleCrud('suppliers', 'suppliers', 'supplier_form', 'suppliers', ['name', 'email', 'phone']);
 
 // ---------- Movimentações ----------
 app.get('/movements', wrap(async (req, res) => {

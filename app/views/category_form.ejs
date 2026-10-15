@@ -1,0 +1,7 @@
+<%- include('_head') %>
+<h1>Editar categoria</h1>
+<form method="post" action="/categories/<%= item.id %>" class="stack">
+  <label>Nome <input name="name" required maxlength="100" value="<%= item.name || '' %>"></label>
+  <div><button>Salvar</button> <a href="/categories">Cancelar</a></div>
+</form>
+<%- include('_foot') %>

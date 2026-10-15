@@ -1,0 +1,9 @@
+<%- include('_head') %>
+<h1>Editar fornecedor</h1>
+<form method="post" action="/suppliers/<%= item.id %>" class="stack">
+  <label>Nome <input name="name" required maxlength="150" value="<%= item.name || '' %>"></label>
+  <label>E-mail <input name="email" type="email" maxlength="150" value="<%= item.email || '' %>"></label>
+  <label>Telefone <input name="phone" maxlength="30" value="<%= item.phone || '' %>"></label>
+  <div><button>Salvar</button> <a href="/suppliers">Cancelar</a></div>
+</form>
+<%- include('_foot') %>

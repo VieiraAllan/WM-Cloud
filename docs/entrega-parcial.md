@@ -22,13 +22,14 @@ Este projeto propõe o **WM Cloud**, um sistema web de gestão de estoque hosped
 
 Aplicação Web de gestão de estoque em infraestrutura Cloud Computing, com:
 
-a) **Cadastros:** produtos, categorias e fornecedores;
+a) **Cadastros:** produtos, categorias e fornecedores, com cadastro, edição e exclusão;
 b) **Entradas e saídas** de mercadorias, com validação que impede estoque negativo;
 c) **Estoque atual** por produto;
 d) **Histórico de movimentações**;
 e) **Estoque mínimo e alertas** de estoque baixo;
 f) **Importação inicial** dos dados das planilhas (migração);
-g) Endpoint `/health` para verificação de saúde pelo balanceador de carga.
+g) Endpoint `/health` para verificação de saúde pelo balanceador de carga;
+h) **Login** com usuário único (administrador) e botão de sair; todas as telas, exceto o health check, exigem login.
 
 ## 3. Resultado Esperado
 
@@ -50,7 +51,8 @@ Implantar uma nuvem computacional de infraestrutura na AWS para hospedar a aplic
 ## 6. Escopo
 
 ### 6.1 Requisitos funcionais
-- CRUD de produtos, categorias e fornecedores;
+- CRUD de produtos, categorias e fornecedores (cadastrar, consultar, editar e excluir);
+- Login e logout de um usuário administrador; sem login, nenhuma tela nem ação é acessível;
 - Registro de entradas e saídas com validação de saldo;
 - Tela de estoque atual com destaque para itens abaixo do mínimo;
 - Histórico de movimentações com filtros;
@@ -60,6 +62,7 @@ Implantar uma nuvem computacional de infraestrutura na AWS para hospedar a aplic
 - **Disponibilidade:** continuar operando se uma instância falhar;
 - **Desempenho:** atender 30 usuários simultâneos com tempo de resposta aceitável;
 - **Segurança:** banco em sub-rede privada, acesso por Security Groups em camadas, porta do banco acessível apenas pela aplicação;
+- **Autenticação:** senha guardada somente como hash (scrypt) e sessão em cookie assinado, sem estado no servidor, para funcionar com várias instâncias; senhas do banco e do administrador no AWS Secrets Manager, fora do código e do *user data*. No ambiente de demonstração o acesso é por HTTP (o laboratório não registra domínio para o ACM), então a senha trafega sem criptografia; o HTTPS faz parte da arquitetura de produção documentada;
 - **Integridade:** movimentações em transações no banco;
 - **Custo:** ambiente de demonstração dentro dos créditos do laboratório.
 
@@ -68,13 +71,13 @@ Implantar uma nuvem computacional de infraestrutura na AWS para hospedar a aplic
 | Item | Ambiente de demonstração (implantado) | Ambiente de produção (documentado) |
 |---|---|---|
 | Computação | EC2 `t3.micro`/`t3.small`, Auto Scaling mín. 1 e máx. 2 | EC2 `t3.medium`, Auto Scaling mín. 2 e máx. 4 |
-| Rede e segurança | VPC, sub-redes em 2 AZs, Internet Gateway, ALB, Security Groups | + sub-redes privadas para app, NAT Gateway, HTTPS com ACM, WAF |
+| Rede e segurança | VPC, sub-redes em 2 AZs, Internet Gateway, ALB, Security Groups, Secrets Manager | + sub-redes privadas para app, NAT Gateway, HTTPS com ACM, WAF |
 | Banco de dados | RDS PostgreSQL `db.t3.micro`, Single-AZ, 20 GB, backup automático | RDS PostgreSQL Multi-AZ |
 | Armazenamento | S3 (arquivos de importação e exportação), snapshots do RDS | S3 com versionamento e replicação |
 | Monitoramento | CloudWatch (CPU, 5xx, conexões do banco) | + alarmes com notificação por SNS |
-| Software | Amazon Linux 2023, Node.js, Express, PostgreSQL, PM2 | idem |
+| Software | Amazon Linux 2023, Node.js, Express, EJS, PostgreSQL | idem |
 
-**Stack da aplicação (JavaScript):** Node.js + Express (API e páginas), páginas renderizadas com EJS (HTML/CSS), PostgreSQL. A aplicação fica em um único processo por instância e sem sessão em memória.
+**Stack da aplicação (JavaScript):** Node.js + Express (API e páginas), páginas renderizadas com EJS (HTML/CSS), PostgreSQL. A aplicação fica em um único processo por instância e sem sessão em memória (a sessão do login vive em um cookie assinado).
 
 ## 7. Cronograma de Execução (Apêndice A)
 

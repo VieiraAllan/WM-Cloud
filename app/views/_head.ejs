@@ -9,6 +9,7 @@
 <body>
 <header>
   <a class="brand" href="/">WM <span>Cloud</span></a>
+<% if (typeof showNav === 'undefined' || showNav) { %>
   <nav>
     <a href="/" class="<%= page === 'stock' ? 'on' : '' %>">Estoque</a>
     <a href="/products/new" class="<%= page === 'products' ? 'on' : '' %>">Novo produto</a>
@@ -17,6 +18,8 @@
     <a href="/suppliers" class="<%= page === 'suppliers' ? 'on' : '' %>">Fornecedores</a>
     <a href="/import" class="<%= page === 'import' ? 'on' : '' %>">Importar CSV</a>
   </nav>
+  <form class="logout" method="post" action="/logout"><button class="ghost">Sair</button></form>
+<% } %>
 </header>
 <main>
 <% if (typeof error !== 'undefined' && error) { %><div class="alert err"><%= error %></div><% } %>
